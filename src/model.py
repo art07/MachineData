@@ -4,7 +4,7 @@ from typing import Dict, List
 
 class DataLab:
     def __init__(self):
-        docs_from_txt: Dict[str, str] = self.create_docs_from_txt()
+        docs_from_txt: Dict[str, str] = self.read_data_from_txt(r"docs\paths_of_docs.txt")
         keys = list(docs_from_txt.keys())
         values = list(docs_from_txt.values())
 
@@ -27,17 +27,21 @@ class DataLab:
             keys[15]: Path(values[15]) if Path(values[15]).is_file() else None
         }
 
+        params_from_txt: Dict[str, str] = self.read_data_from_txt(r"docs\paths_of_regedit_branches.txt")
+        reg_param = list(params_from_txt.keys())
+        path_to_reg_param = list(params_from_txt.values())
+
         self.__reg_param_list: List[RegParam] = [
-            RegParam("REMOTEPEER", r"SOFTWARE\Wincor Nixdorf\ProTopas\CurrentVersion\CCOPEN\COMMUNICATION\TCPIP\PROJECT"),
-            RegParam("PORTNUMBER", r"SOFTWARE\Wincor Nixdorf\ProTopas\CurrentVersion\CCOPEN\COMMUNICATION\TCPIP\PROJECT"),
-            RegParam("Header", r"SOFTWARE\Wincor Nixdorf\ProTopas\CurrentVersion\LYNXPAR\Renome\CassCounters"),
-            RegParam("PAGE_HEADER", r"SOFTWARE\Wincor Nixdorf\ProTopas\CurrentVersion\LYNXPAR\PRINTER\RECEIPT"),
-            RegParam("NUM_LOG_CASS", r"SOFTWARE\Wincor Nixdorf\ProTopas\CurrentVersion\LYNXPAR\CASH_DISPENSER"),
-            RegParam("DOUBLE_LENGTH_KEYS", r"SOFTWARE\Wincor Nixdorf\ProTopas\CurrentVersion\LYNXPAR\APPLICATION"),
-            RegParam("NoteIDs", r"SOFTWARE\XFS\PHYSICAL_SERVICES\SNA30"),
-            RegParam("Counters", r"SOFTWARE\XFS\PHYSICAL_SERVICES\SNA30"),
-            RegParam("Notes", r"SOFTWARE\Renome-Smart\TPCA\Config"),
-            RegParam("TerminalID", r"SOFTWARE\Renome-Smart\TPCA\Config")
+            RegParam(reg_param[0], path_to_reg_param[0]),
+            RegParam(reg_param[1], path_to_reg_param[1]),
+            RegParam(reg_param[2], path_to_reg_param[2]),
+            RegParam(reg_param[3], path_to_reg_param[3]),
+            RegParam(reg_param[4], path_to_reg_param[4]),
+            RegParam(reg_param[5], path_to_reg_param[5]),
+            RegParam(reg_param[6], path_to_reg_param[6]),
+            RegParam(reg_param[7], path_to_reg_param[7]),
+            RegParam(reg_param[8], path_to_reg_param[8]),
+            RegParam(reg_param[9], path_to_reg_param[9])
         ]
 
         self.__chosen_dir = None
@@ -47,13 +51,13 @@ class DataLab:
         self.__REG_dir = None
 
     @staticmethod
-    def create_docs_from_txt():
-        docs_from_txt: Dict[str, str] = {}
-        with open("paths_of_docs.txt") as file_object:
+    def read_data_from_txt(path: str):
+        data_in_dic: Dict[str, str] = {}
+        with open(path) as file_object:
             for line in file_object:
                 lst = line.rstrip().split("#")
-                docs_from_txt[lst[0]] = lst[1]
-        return docs_from_txt
+                data_in_dic[lst[0]] = lst[1]
+        return data_in_dic
 
     def get_all_machines_docs(self):
         return self.__all_machines_docs
