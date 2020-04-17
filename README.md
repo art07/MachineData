@@ -1,1 +1,1 @@
-Machine Data is a Python program for quickly collecting logs and registry data on ATM before re-installing the system by service engineers. This program also allows quickly and conveniently analyze errors in the logs of the CDM module.
+Machine Data is a Python program for quickly collecting logs and registry data on ATM or on self-service terminal before re-installing the system by service engineers. This program also allows quickly and conveniently analyze errors in the logs of the CDM module.
