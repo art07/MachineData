@@ -1,12 +1,14 @@
 from pathlib import Path
 from typing import Dict, List
 
+import docs
+
 
 class DataLab:
     def __init__(self):
-        docs_from_txt: Dict[str, str] = self.read_data_from_txt(r"docs\paths_of_docs.txt")
-        keys = list(docs_from_txt.keys())
-        values = list(docs_from_txt.values())
+        atm_docs: Dict[str, str] = docs.get_atm_docs()
+        keys = list(atm_docs.keys())
+        values = list(atm_docs.values())
 
         self.__all_machines_docs: Dict[str, Path] = {
             keys[0]: Path(values[0]) if Path(values[0]).is_dir() else None,
@@ -27,9 +29,20 @@ class DataLab:
             keys[15]: Path(values[15]) if Path(values[15]).is_file() else None
         }
 
-        params_from_txt: Dict[str, str] = self.read_data_from_txt(r"docs\paths_of_regedit_branches.txt")
-        reg_param = list(params_from_txt.keys())
-        path_to_reg_param = list(params_from_txt.values())
+        regedit_branches: Dict[str, str] = docs.get_regedit_branches()
+        branches_keys: List[str] = list(regedit_branches.keys())
+        branches_values: List[str] = list(regedit_branches.values())
+
+        self.__reg_branch_list: List[RegBranch] = [
+            RegBranch(branches_keys[0], branches_values[0]),
+            RegBranch(branches_keys[1], branches_values[1]),
+            RegBranch(branches_keys[2], branches_values[2]),
+            RegBranch(branches_keys[3], branches_values[3])
+        ]
+
+        regedit_values: Dict[str, str] = docs.get_regedit_values()
+        reg_param = list(regedit_values.keys())
+        path_to_reg_param = list(regedit_values.values())
 
         self.__reg_param_list: List[RegParam] = [
             RegParam(reg_param[0], path_to_reg_param[0]),
@@ -44,60 +57,61 @@ class DataLab:
             RegParam(reg_param[9], path_to_reg_param[9])
         ]
 
-        self.__chosen_dir = None
-        self.__MACHINE_DATA_DIR = None
-        self.__CHOSEN_machine_docs = []
-        self.__TPCA_dir = None
-        self.__REG_dir = None
-
-    @staticmethod
-    def read_data_from_txt(path: str):
-        data_in_dic: Dict[str, str] = {}
-        with open(path) as file_object:
-            for line in file_object:
-                lst = line.rstrip().split("#")
-                data_in_dic[lst[0]] = lst[1]
-        return data_in_dic
+        self.__BASE_DIR: Path = Path('')
+        self.__MACHINE_DATA_DIR: Path = Path('')
+        self.__available_machine_docs: List[Path] = []
+        self.__TPCA_dir: Path = Path('')
+        self.__REG_dir: Path = Path('')
 
     def get_all_machines_docs(self):
         return self.__all_machines_docs
 
     def get_CHOSEN_machine_docs(self):
-        return self.__CHOSEN_machine_docs
+        return self.__available_machine_docs
 
-    def set_CHOSEN_machine_docs(self, chosen_list):
-        self.__CHOSEN_machine_docs = chosen_list
+    def set_available_machine_docs(self, available_machine_docs: List[Path]):
+        self.__available_machine_docs = available_machine_docs
 
     def get_machine_data_dir(self):
         return self.__MACHINE_DATA_DIR
 
-    def set_machine_data_dir(self, param: Path):
-        self.__MACHINE_DATA_DIR = param
+    def set_machine_data_dir(self, machinedata_dir: Path):
+        self.__MACHINE_DATA_DIR = machinedata_dir
 
-    def get_chosen_dir(self):
-        return self.__chosen_dir
+    def get_base_dir(self):
+        return self.__BASE_DIR
 
-    def set_chosen_dir(self, chosen_dir: Path):
-        self.__chosen_dir = chosen_dir
+    def set_base_dir(self, base_dir: Path):
+        self.__BASE_DIR = base_dir
 
     def get_REG_dir(self):
         return self.__REG_dir
 
-    def set_REG_dir(self, param):
-        self.__REG_dir = param
+    def set_REG_dir(self, reg_dir: Path):
+        self.__REG_dir = reg_dir
 
     def get_reg_param_list(self):
         return self.__reg_param_list
 
+    def get_reg_branch_list(self):
+        return self.__reg_branch_list
+
     def get_TPCA_dir(self):
         return self.__TPCA_dir
 
-    def set_TPCA_dir(self, param):
-        self.__TPCA_dir = param
+    def set_TPCA_dir(self, tpca_dir: Path):
+        self.__TPCA_dir = tpca_dir
 
 
 class RegParam:
     def __init__(self, reg_name: str, reg_path: str):
-        self.param_name = reg_name
-        self.param_path = reg_path
+        self.param_name: str = reg_name
+        self.param_path: str = reg_path
         self.param_value = None
+
+
+class RegBranch:
+    def __init__(self, branch_name: str, branch_path: str):
+        self.branch_name: str = branch_name
+        self.full_branch_name: str = f"{branch_name}.reg"
+        self.branch_path: str = branch_path
